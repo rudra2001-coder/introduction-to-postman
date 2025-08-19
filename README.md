@@ -1,26 +1,128 @@
- # 👋 Introduction to Postman course
+# Simple Books API #
 
- [🏆 Become an EXPERT in Postman & API TESTING, without WASTING TIME](https://sendfox.com/lp/m74j2r)
+This API allows you to reserve a book.
 
-Hello 👋 and welcome to this free course on writing API tests with Postman. 
+The API is available at `https://simple-books-api.click`
 
-**Scroll down for course notes & important links.** 👇
+## Endpoints ##
 
-[![Watch the video on freeCodeCamp](https://img.youtube.com/vi/VywxIQ2ZXw4/sddefault.jpg)](https://www.youtube.com/watch?v=VywxIQ2ZXw4)
+### Status ###
 
-## Important links
+GET `/status`
 
-* [📝 Course notes](./course-notes.md)
-* [📚 Simple Books API documentation](./simple-books-api.md)
-* [💬 Join the Discord Group for help](https://discord.gg/EEEct8sgYM)
+Returns the status of the API.
 
-## Get in touch
+### List of books ###
 
-* [📺 Subscribe to my YouTube channel](https://www.youtube.com/@vdespa?sub_confirmation=1)
-* [🐦 Twitter](https://twitter.com/vdespa)
-* [🏢 LinkedIn](https://www.linkedin.com/in/vdespa/)
-* [🎓 My other Courses](https://vdespa.com/courses)
+GET `/books`
 
-## Learn even more
+Returns a list of books.
 
-* [💻 Postman Complete course for API testing  - with FreeCodeCamp discount](https://www.udemy.com/course/postman-the-complete-guide/?couponCode=FREECODECAMP_2021) 
+Optional query parameters:
+
+- type: fiction or non-fiction
+- limit: a number between 1 and 20.
+
+
+### Get a single book ###
+
+GET `/books/:bookId`
+
+Retrieve detailed information about a book.
+
+
+### Submit an order ###
+
+POST `/orders`
+
+Allows you to submit a new order. Requires authentication.
+
+The request body needs to be in JSON format and include the following properties:
+
+ - `bookId` - Integer - Required
+ - `customerName` - String - Required
+
+Example
+```
+POST /orders/
+Authorization: Bearer <YOUR TOKEN>
+
+{
+  "bookId": 1,
+  "customerName": "John"
+}
+```
+
+The response body will contain the order Id.
+
+### Get all orders ###
+
+GET `/orders`
+
+Allows you to view all orders. Requires authentication.
+
+### Get an order ###
+
+GET `/orders/:orderId`
+
+Allows you to view an existing order. Requires authentication.
+
+### Update an order ###
+
+PATCH `/orders/:orderId`
+
+Update an existing order. Requires authentication.
+
+The request body needs to be in JSON format and allows you to update the following properties:
+
+ - `customerName` - String
+
+ Example
+```
+PATCH /orders/PF6MflPDcuhWobZcgmJy5
+Authorization: Bearer <YOUR TOKEN>
+
+{
+  "customerName": "John"
+}
+```
+
+### Delete an order ###
+
+DELETE `/orders/:orderId`
+
+Delete an existing order. Requires authentication.
+
+The request body needs to be empty.
+
+ Example
+```
+DELETE /orders/PF6MflPDcuhWobZcgmJy5
+Authorization: Bearer <YOUR TOKEN>
+```
+
+## API Authentication ##
+
+To submit or view an order, you need to register your API client.
+
+POST `/api-clients/`
+
+The request body needs to be in JSON format and include the following properties:
+
+ - `clientName` - String
+ - `clientEmail` - String
+
+ Example
+
+ ```
+ {
+    "clientName": "Postman",
+    "clientEmail": "valentin@example.com"
+}
+ ```
+
+The response body will contain the access token. The access token is valid for 7 days.
+
+**Possible errors**
+
+Status code 409 - "API client already registered." Try changing the values for `clientEmail` and `clientName` to something else.
